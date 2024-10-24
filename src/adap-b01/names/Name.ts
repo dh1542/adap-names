@@ -11,7 +11,7 @@ export class Name {
       this.delimiter = delimiter;
     }
   }
-
+    /** Returns human-readable representation of Name instance */
   public asNameString(delimiter: string = this.delimiter): string {
     let result: string = "";
     this.components.forEach((element, index) => {
@@ -32,7 +32,7 @@ export class Name {
     this.checkForArrayOutOfBounds(i);
     this.components[i] = c;
   }
-
+    /** Returns number of components in Name instance */
   public getNoComponents(): number {
     console.log(this.components.length);
     return this.components.length;
