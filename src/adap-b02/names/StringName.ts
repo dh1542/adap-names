@@ -1,58 +1,73 @@
 import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
 
 export class StringName implements Name {
+  protected delimiter: string = DEFAULT_DELIMITER;
 
-    protected delimiter: string = DEFAULT_DELIMITER;
+  protected name: string = "";
+  protected length: number = 0;
 
-    protected name: string = "";
-    protected length: number = 0;
+  constructor(other: string, delimiter?: string) {
+    this.name = other;
+    this.delimiter = delimiter || DEFAULT_DELIMITER;
+  }
 
-    constructor(other: string, delimiter?: string) {
-        throw new Error("needs implementation");
-    }
+  public asString(delimiter: string = this.delimiter): string {
+    return this.name;
+  }
 
-    public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
-    }
+  /**
+   * Returns a machine-readable representation of Name instance using default control characters
+   * Machine-readable means that from a data string, a Name can be parsed back in
+   * The control characters in the data string are the default characters
+   */
+  public asDataString(): string {
+    throw new Error("needs implementation");
+  }
 
-    public asDataString(): string {
-        throw new Error("needs implementation");
-    }
+  public isEmpty(): boolean {
+    return this.name.length == 0;
+  }
 
-    public isEmpty(): boolean {
-        throw new Error("needs implementation");
-    }
+  public getDelimiterCharacter(): string {
+    return this.delimiter;
+  }
 
-    public getDelimiterCharacter(): string {
-        throw new Error("needs implementation");
-    }
+  public getNoComponents(): number {
+    return this.splitStringIntoComponents(this.delimiter).length;
+  }
 
-    public getNoComponents(): number {
-        throw new Error("needs implementation");
-    }
+  public getComponent(x: number): string {
+    let components: string[] = this.splitStringIntoComponents(this.delimiter);
+    return components[x];
+  }
 
-    public getComponent(x: number): string {
-        throw new Error("needs implementation");
-    }
+  public setComponent(n: number, c: string): void {
+    let components: string[] = this.splitStringIntoComponents(this.delimiter);
+    components[n] = c;
+    this.name = components.join(this.delimiter);
+  }
 
-    public setComponent(n: number, c: string): void {
-        throw new Error("needs implementation");
-    }
+  public insert(n: number, c: string): void {
+    let components: string[] = this.splitStringIntoComponents(this.delimiter);
+    components.splice(n, 0, c);
+    this.name = components.join(this.delimiter);
+  }
 
-    public insert(n: number, c: string): void {
-        throw new Error("needs implementation");
-    }
+  public append(c: string): void {
+    this.name += this.delimiter + c;
+  }
 
-    public append(c: string): void {
-        throw new Error("needs implementation");
-    }
+  public remove(n: number): void {
+    let components: string[] = this.splitStringIntoComponents(this.delimiter);
+    components.splice(n, 1);
+    this.name = components.join(this.delimiter);
+  }
 
-    public remove(n: number): void {
-        throw new Error("needs implementation");
-    }
+  public concat(other: Name): void {
+    this.name += this.delimiter + other.asString();
+  }
 
-    public concat(other: Name): void {
-        throw new Error("needs implementation");
-    }
-
+  public splitStringIntoComponents(delimiter: string): string[] {
+    return this.name.split(delimiter);
+  }
 }
