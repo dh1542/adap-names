@@ -3,13 +3,29 @@ import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
 export abstract class AbstractName implements Name {
 
     protected delimiter: string = DEFAULT_DELIMITER;
-
+  
     constructor(delimiter: string = DEFAULT_DELIMITER) {
-        throw new Error("needs implementation");
+        this.delimiter = delimiter;
     }
 
+
+    /**
+     * Returns a human-readable representation of the Name instance using user-set control characters
+     * Control characters are not escaped (creating a human-readable string)
+     * Users can vary the delimiter character to be used
+     */
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
+        let output: string = "";
+        let numberOfComponents = this.getNoComponents();
+        
+        for(let i = 0; i < numberOfComponents; i++) {
+            output += this.getComponent(i);
+            if(i < numberOfComponents - 1) {
+                output += delimiter;
+            }
+        }
+        return output;
+
     }
 
     public toString(): string {
@@ -33,11 +49,14 @@ export abstract class AbstractName implements Name {
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation");
+       if(this.getNoComponents() == 0) {
+           return true;
+       }
+       return false;
     }
 
     public getDelimiterCharacter(): string {
-        throw new Error("needs implementation");
+        return this.delimiter;
     }
 
     abstract getNoComponents(): number;

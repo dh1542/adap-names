@@ -7,16 +7,16 @@ export class StringName extends AbstractName {
     protected length: number = 0;
 
     constructor(other: string, delimiter?: string) {
-        super();
-        throw new Error("needs implementation");
+        super(delimiter);
+        this.name = other;
     }
 
     getNoComponents(): number {
-        throw new Error("needs implementation");
+        return this.name.split(this.delimiter).length;
     }
 
     getComponent(i: number): string {
-        throw new Error("needs implementation");
+        return this.name.split(this.delimiter)[i];
     }
     setComponent(i: number, c: string) {
         throw new Error("needs implementation");

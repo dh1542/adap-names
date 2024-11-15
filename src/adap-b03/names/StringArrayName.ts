@@ -6,16 +6,16 @@ export class StringArrayName extends AbstractName {
     protected components: string[] = [];
 
     constructor(other: string[], delimiter?: string) {
-        super();
-        throw new Error("needs implementation");
+        super(delimiter);
+        this.components = other;
     }
 
     getNoComponents(): number {
-        throw new Error("needs implementation");
+        return this.components.length;
     }
 
     getComponent(i: number): string {
-        throw new Error("needs implementation");
+        return this.components[i];
     }
     setComponent(i: number, c: string) {
         throw new Error("needs implementation");
