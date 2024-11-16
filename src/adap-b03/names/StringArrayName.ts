@@ -2,32 +2,51 @@ import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
 import { AbstractName } from "./AbstractName";
 
 export class StringArrayName extends AbstractName {
+  protected components: string[] = [];
 
-    protected components: string[] = [];
+  constructor(other: string[] = [], delimiter?: string) {
+    super(delimiter);
+    this.components = other;
+  }
 
-    constructor(other: string[], delimiter?: string) {
-        super(delimiter);
-        this.components = other;
-    }
+  getNoComponents(): number {
+    return this.components.length;
+  }
 
-    getNoComponents(): number {
-        return this.components.length;
-    }
+  getComponent(i: number): string {
+    this.checkForArrayOutOfBounds(i);
+    return this.components[i];
+  }
+  setComponent(i: number, c: string) {
+    this.checkForArrayOutOfBounds(i);
+    this.components[i] = c;
+  }
 
-    getComponent(i: number): string {
-        return this.components[i];
+  insert(i: number, c: string) {
+    this.checkForArrayOutOfBounds(i);
+    this.components.splice(i, 0, c);
+  }
+  append(c: string) {
+    if (this.components != null) {
+      this.components.push(c);
     }
-    setComponent(i: number, c: string) {
-        throw new Error("needs implementation");
-    }
+  }
+  remove(i: number) {
+    this.checkForArrayOutOfBounds(i);
+    this.components.splice(i, 1);
+  }
+  clone(): Name {
+    return new StringArrayName(this.components, this.delimiter);
+  }
 
-    insert(i: number, c: string) {
-        throw new Error("needs implementation");
+  /**
+   * Checks if the passed index is inside the array (components) boundaries and
+   * throws exception if necessary
+   * @methodtype assertion-method
+   */
+  private checkForArrayOutOfBounds(index: number): void {
+    if (index < 0 || index > this.components.length - 1) {
+      throw new Error("Array index out of bounds!");
     }
-    append(c: string) {
-        throw new Error("needs implementation");
-    }
-    remove(i: number) {
-        throw new Error("needs implementation");
-    }
+  }
 }
