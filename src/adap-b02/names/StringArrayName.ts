@@ -1,5 +1,6 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
+import {a} from "vitest/dist/chunks/suite.CcK46U-P";
 
 export class StringArrayName implements Name {
   protected components: string[] = [];
@@ -81,5 +82,8 @@ export class StringArrayName implements Name {
     if (index < 0 || index > this.components.length - 1) {
       throw new Error("Array index out of bounds!");
     }
+  }
+
+  concat(other: Name): void {
   }
 }
