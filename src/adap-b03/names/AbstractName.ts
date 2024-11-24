@@ -1,11 +1,12 @@
-import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
+import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
+import { Name } from "./Name";
 
 export abstract class AbstractName implements Name {
   protected delimiter: string = DEFAULT_DELIMITER;
 
-  constructor(delimiter: string = DEFAULT_DELIMITER) {
-    this.delimiter = delimiter;
-  }
+    constructor(delimiter: string = DEFAULT_DELIMITER) {
+        throw new Error("needs implementation");
+    }
 
   /**
    * Returns a human-readable representation of the Name instance using user-set control characters
