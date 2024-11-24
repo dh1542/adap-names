@@ -1,13 +1,15 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
-import { MethodFailureException } from "../common/MethodFailureException";
-import { InvalidStateException } from "../common/InvalidStateException";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 export abstract class AbstractName implements Name {
   protected delimiter: string = DEFAULT_DELIMITER;
 
   constructor(delimiter: string = DEFAULT_DELIMITER) {
+    IllegalArgumentException.assertCondition(
+      delimiter.length === 1,
+      "delimiter must be a single character"
+    );
     this.delimiter = delimiter;
   }
 
@@ -16,11 +18,13 @@ export abstract class AbstractName implements Name {
   }
 
   public asString(delimiter: string = this.delimiter): string {
-    
+    IllegalArgumentException.assertCondition(
+      delimiter.length == 1,
+      "Delimiter must be a single character"
+    );
     let output: string = "";
 
     let numberOfComponents = this.getNoComponents();
-    
 
     for (let i = 0; i < numberOfComponents; i++) {
       output += this.getComponent(i);
@@ -40,6 +44,10 @@ export abstract class AbstractName implements Name {
   }
 
   public isEqual(other: Name): boolean {
+    IllegalArgumentException.assertIsNotNullOrUndefined(
+      other,
+      "argument is null"
+    );
     return (
       this.getHashCode() == other.getHashCode() &&
       this.asString() == other.asString()
@@ -49,7 +57,6 @@ export abstract class AbstractName implements Name {
   public getHashCode(): number {
     const str = this.toString();
     const className = this.constructor.name;
-    
 
     const delimiterCharCode = this.getDelimiterCharacter().charCodeAt(0);
 
@@ -69,11 +76,15 @@ export abstract class AbstractName implements Name {
   }
 
   public isEmpty(): boolean {
-    throw new Error("needs implementation");
+    return this.getNoComponents() == 0;
   }
 
   public getDelimiterCharacter(): string {
-    throw new Error("needs implementation");
+    IllegalArgumentException.assertCondition(
+      this.delimiter.length == 1,
+      "Delimiter must be a single character"
+    );
+    return this.delimiter;
   }
 
   abstract getNoComponents(): number;
@@ -86,6 +97,21 @@ export abstract class AbstractName implements Name {
   abstract remove(i: number): void;
 
   public concat(other: Name): void {
-    throw new Error("needs implementation");
+    IllegalArgumentException.assertCondition(other != null, "argument is null");
+    IllegalArgumentException.assertCondition(
+      other.getNoComponents() > 0,
+      "argument has no components"
+    );
+    IllegalArgumentException.assertCondition(
+      this.getNoComponents() > 0,
+      "this has no components"
+    );
+    IllegalArgumentException.assertCondition(
+      this.getDelimiterCharacter() == other.getDelimiterCharacter(),
+      "delimiters do not match"
+    );
+    for (let i = 0; i < other.getNoComponents(); i++) {
+      this.append(other.getComponent(i));
+    }
   }
 }
