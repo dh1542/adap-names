@@ -1,38 +1,73 @@
 import { Node } from "./Node";
 import { Directory } from "./Directory";
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailureException } from "../common/MethodFailureException";
 
 export class Link extends Node {
+  protected targetNode: Node | null = null;
 
-    protected targetNode: Node | null = null;
+  constructor(bn: string, pn: Directory, tn?: Node) {
+    IllegalArgumentException.assertIsNotNullOrUndefined(
+      bn,
+      "Base name can't be null or undefined"
+    );
+    IllegalArgumentException.assertIsNotNullOrUndefined(
+      pn,
+      "Parent node can't be null or undefined"
+    );
+    super(bn, pn);
 
-    constructor(bn: string, pn: Directory, tn?: Node) {
-        super(bn, pn);
-
-        if (tn != undefined) {
-            this.targetNode = tn;
-        }
+    if (tn != undefined) {
+      this.targetNode = tn;
     }
 
-    public getTargetNode(): Node | null {
-        return this.targetNode;
-    }
+    MethodFailureException.assertCondition(
+      this.getBaseName() == bn,
+      "Failed to set base name"
+    );
+    MethodFailureException.assertCondition(
+      this.getParentNode() == pn,
+      "Failed to set parent node"
+    );
+  }
 
-    public setTargetNode(target: Node): void {
-        this.targetNode = target;
-    }
+  public getTargetNode(): Node | null {
+    return this.targetNode;
+  }
 
-    public getBaseName(): string {
-        const target = this.ensureTargetNode(this.targetNode);
-        return target.getBaseName();
-    }
+  public setTargetNode(target: Node): void {
+    IllegalArgumentException.assertIsNotNullOrUndefined(
+      target,
+      "Target node can't be null or undefined"
+    );
+    this.targetNode = target;
+    MethodFailureException.assertCondition(
+      this.targetNode == target,
+      "Failed to set target node"
+    );
+  }
 
-    public rename(bn: string): void {
-        const target = this.ensureTargetNode(this.targetNode);
-        target.rename(bn);
-    }
+  public getBaseName(): string {
+    const target = this.ensureTargetNode(this.targetNode);
+    return target.getBaseName();
+  }
 
-    protected ensureTargetNode(target: Node | null): Node {
-        const result: Node = this.targetNode as Node;
-        return result;
-    }
+  public rename(bn: string): void {
+    IllegalArgumentException.assertIsNotNullOrUndefined(
+      bn,
+      "Base name can't be null or undefined"
+    );
+    const target = this.ensureTargetNode(this.targetNode);
+    target.rename(bn);
+    MethodFailureException;
+  }
+
+  protected ensureTargetNode(target: Node | null): Node {
+    IllegalArgumentException.assertCondition(
+      target != undefined,
+      "Target node is undefined"
+    );
+    const result: Node = this.targetNode as Node;
+    return result;
+  }
 }
