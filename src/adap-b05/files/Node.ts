@@ -1,9 +1,12 @@
+import { getDefaultResultOrder } from "dns";
 import { ExceptionType, AssertionDispatcher } from "../common/AssertionDispatcher";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
+import { get } from "http";
+import { RootNode } from "./RootNode";
 
 export class Node {
 
@@ -58,7 +61,18 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("needs implementation or deletion");
+        let result: Set<Node> = new Set<Node>();
+
+        // check current node if name matches
+        if(this.doGetBaseName() == bn) {
+            result.add(this);
+        }
+
+        let root: RootNode = RootNode.getRootNode();
+        let children: Set<Node> = root.childNodes;
+
+
+        return result;
     }
 
     protected assertClassInvariants(): void {
