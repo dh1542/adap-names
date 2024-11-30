@@ -2,7 +2,7 @@ import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { InvalidStateException } from "../common/InvalidStateException";
-import { MethodFailureException } from "../common/MethodFailureException";
+import { MethodFailedException } from "../common/MethodFailedException";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 export class StringName extends AbstractName {
@@ -20,7 +20,7 @@ export class StringName extends AbstractName {
   }
 
   public getNoComponents(): number {
-    MethodFailureException.assertCondition(
+    MethodFailedException.assertCondition(
       this.getNoComponents() > 0,
       "No components"
     );

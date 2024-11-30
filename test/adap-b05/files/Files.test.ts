@@ -13,6 +13,7 @@ function createFileSystem(): RootNode {
 
   let usr: Directory = new Directory("usr", rn);
   let bin: Directory = new Directory("bin", usr);
+
   let ls: File = new File("ls", bin);
   let code: File = new File("code", bin);
 
@@ -29,9 +30,15 @@ function createFileSystem(): RootNode {
 
 describe("Basic naming test", () => {
   it("test name checking", () => {
-    // let fs: RootNode = createFileSystem();
-    // let ls: Node = [...fs.findNodes("ls")][0];
-    // expect(ls.getFullName().isEqual(new StringName("/usr/bin/ls", '/')));
+    let fs: RootNode = createFileSystem();
+
+    console.log("Full name: ", fs.getFullName());
+
+    let nodes: Set<Node> = fs.findNodes("ls");
+
+    let ls: Node = [...fs.findNodes("ls")][0];
+
+    expect(ls.getFullName().isEqual(new StringName("/usr/bin/ls", "/")));
   });
 });
 

@@ -2,7 +2,7 @@ import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { MethodFailureException } from "../common/MethodFailureException";
+import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringArrayName extends AbstractName {
   protected components: string[] = [];
@@ -21,7 +21,7 @@ export class StringArrayName extends AbstractName {
   }
 
   public getNoComponents(): number {
-    MethodFailureException.assertCondition(
+    MethodFailedException.assertCondition(
       this.components.length > 0,
       "No components"
     );
@@ -51,7 +51,7 @@ export class StringArrayName extends AbstractName {
     );
 
     this.components[i] = c;
-    MethodFailureException.assertCondition(
+    MethodFailedException.assertCondition(
       this.components[i] == c,
       "Failed to set component"
     );
@@ -68,7 +68,7 @@ export class StringArrayName extends AbstractName {
     );
     IllegalArgumentException.assertCondition(c.length > 0, "c is empty");
     this.components.splice(i, 0, c);
-    MethodFailureException.assertCondition(
+    MethodFailedException.assertCondition(
       this.components[i] == c,
       "Failed to insert component"
     );
@@ -78,7 +78,7 @@ export class StringArrayName extends AbstractName {
     IllegalArgumentException.assertIsNotNullOrUndefined(c, "c is null");
     IllegalArgumentException.assertCondition(c.length > 0, "c is empty");
     this.components.push(c);
-    MethodFailureException.assertCondition(
+    MethodFailedException.assertCondition(
       this.components[this.getNoComponents() - 1] == c,
       "Failed to append component"
     );
