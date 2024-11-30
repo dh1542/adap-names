@@ -104,18 +104,16 @@ export class Node {
       bn != null && bn != undefined,
       "invalid base name"
     );
-
     let result: Set<Node> = new Set<Node>();
 
-    console.log("Current node: ", this.getBaseName());
-    console.log("Searching for: ");
-
     if (this.getBaseName() == bn) {
-      console.log("Found node: ", this.getBaseName());
       result.add(this);
-    } else {
-      // somehow get child nodes and look from there if end of tree return the empty set
     }
+    this.getChildNodes().forEach((node) => {
+      node.findNodes(bn).forEach((n) => {
+        result.add(n);
+      });
+    });
 
     return result;
   }
@@ -128,5 +126,9 @@ export class Node {
   protected assertIsValidBaseName(bn: string, et: ExceptionType): void {
     const condition: boolean = bn != "";
     AssertionDispatcher.dispatch(et, condition, "invalid base name");
+  }
+
+  public getChildNodes(): Set<Node> {
+    return new Set<Node>();
   }
 }

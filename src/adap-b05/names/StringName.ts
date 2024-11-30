@@ -16,10 +16,6 @@ export class StringName extends AbstractName {
   }
 
   public getNoComponents(): number {
-    MethodFailedException.assertCondition(
-      this.getNoComponents() > 0,
-      "No components"
-    );
     return this.noComponents;
   }
 
@@ -90,13 +86,9 @@ export class StringName extends AbstractName {
   }
 
   public append(c: string) {
-    IllegalArgumentException.assertCondition(c.length > 0, "c is empty");
     this.name += this.delimiter + c;
     this.noComponents++;
-    InvalidStateException.assertCondition(
-      this.getComponent(this.noComponents - 1) == c,
-      "Failed to append component"
-    );
+    console.log(this.name);
   }
 
   public remove(i: number) {

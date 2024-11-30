@@ -5,8 +5,8 @@ import { StringName } from "../../../src/adap-b05/names/StringName";
 import { Node } from "../../../src/adap-b05/files/Node";
 import { File } from "../../../src/adap-b05/files/File";
 import { BuggyFile } from "../../../src/adap-b05/files/BuggyFile";
-import { Directory } from "../../../src/adap-b05/files/Directory";
 import { RootNode } from "../../../src/adap-b05/files/RootNode";
+import { Directory } from "../../../src/adap-b05/files/Directory";
 
 function createFileSystem(): RootNode {
   let rn: RootNode = new RootNode();
@@ -32,12 +32,8 @@ describe("Basic naming test", () => {
   it("test name checking", () => {
     let fs: RootNode = createFileSystem();
 
-    console.log("Full name: ", fs.getFullName());
-
-    let nodes: Set<Node> = fs.findNodes("ls");
-
     let ls: Node = [...fs.findNodes("ls")][0];
-
+    console.log(ls.getFullName().toString());
     expect(ls.getFullName().isEqual(new StringName("/usr/bin/ls", "/")));
   });
 });
