@@ -60,10 +60,20 @@ export class Node {
 
   public getBaseName(): string {
     this.assertClassInvariants();
+    AssertionDispatcher.dispatch(
+      ExceptionType.PRECONDITION,
+      this.baseName != null,
+      "Base name must not be null"
+    );
     return this.doGetBaseName();
   }
 
   protected doGetBaseName(): string {
+    AssertionDispatcher.dispatch(
+      ExceptionType.PRECONDITION,
+      this.baseName != null,
+      "Base name must not be null"
+    );
     return this.baseName;
   }
 
