@@ -5,6 +5,7 @@ import {
   AssertionDispatcher,
   ExceptionType,
 } from "../common/AssertionDispatcher";
+import { ServiceFailureException } from "../common/ServiceFailureException";
 
 enum FileState {
   OPEN,
@@ -17,6 +18,7 @@ export class File extends Node {
 
   constructor(baseName: string, parent: Directory) {
     super(baseName, parent);
+    this.assertClassInvariants();
   }
 
   public open(): void {

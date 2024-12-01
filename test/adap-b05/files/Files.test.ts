@@ -68,11 +68,16 @@ describe("Buggy setup test", () => {
       let fs: RootNode = createBuggySetup();
       fs.findNodes("ls");
     } catch (er) {
+      console.log("Threw ex")
       threwException = true;
+
       let ex: Exception = er as Exception;
       expect(ex instanceof ServiceFailureException);
+
+      console.log(ex);
       expect(ex.hasTrigger());
       let tx: Exception = ex.getTrigger();
+      console.log(tx);
       expect(tx instanceof InvalidStateException);
     }
     expect(threwException);

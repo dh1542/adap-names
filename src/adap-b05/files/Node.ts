@@ -2,8 +2,10 @@ import {
   ExceptionType,
   AssertionDispatcher,
 } from "../common/AssertionDispatcher";
+import { Exception } from "../common/Exception";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
+import { ServiceFailureException } from "../common/ServiceFailureException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
@@ -14,11 +16,16 @@ export class Node {
   protected parentNode: Directory;
 
   constructor(bn: string, pn: Directory) {
-    this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
-    this.doSetBaseName(bn);
-    this.parentNode = pn; // why oh why do I have to set this
-    this.initialize(pn);
-    this.assertClassInvariants();
+    try{
+      this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
+      this.doSetBaseName(bn);
+      this.parentNode = pn; // why oh why do I have to set this
+      this.initialize(pn);
+      this.assertClassInvariants();
+    } catch(e: any){
+      throw new ServiceFailureException("Error creating node", e)
+    }
+    
   }
 
   protected initialize(pn: Directory): void {
@@ -33,12 +40,13 @@ export class Node {
   }
 
   public move(to: Directory): void {
+    this.assertClassInvariants();
     AssertionDispatcher.dispatch(
       ExceptionType.PRECONDITION,
       to != null,
       "Invalid destination"
     );
-    this.assertClassInvariants();
+    
     this.parentNode.remove(this);
     to.add(this);
     this.parentNode = to;
@@ -115,15 +123,19 @@ export class Node {
       "invalid base name"
     );
     let result: Set<Node> = new Set<Node>();
-
-    if (this.getBaseName() == bn) {
-      result.add(this);
-    }
-    this.getChildNodes().forEach((node) => {
-      node.findNodes(bn).forEach((n) => {
-        result.add(n);
+    try{
+      if (this.getBaseName() == bn) {
+        result.add(this);
+      }
+      this.getChildNodes().forEach((node) => {
+        node.findNodes(bn).forEach((n) => {
+          result.add(n);
+        });
       });
-    });
+    } catch(e: any){
+      throw new ServiceFailureException("Error finding node", e)
+    }
+    
 
     return result;
   }
