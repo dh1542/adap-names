@@ -8,14 +8,7 @@ export class StringArrayName extends AbstractName {
   protected components: string[] = [];
 
   constructor(other: string[], delimiter?: string) {
-    IllegalArgumentException.assertCondition(
-      other != null,
-      "other must not be null"
-    );
-    IllegalArgumentException.assertCondition(
-      other.length > 0,
-      "other must not be empty"
-    );
+    
     super(delimiter);
     this.components = other;
   }

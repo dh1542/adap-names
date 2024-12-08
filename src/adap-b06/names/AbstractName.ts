@@ -1,27 +1,24 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailedException } from "../common/MethodFailedException";
+import { InvalidStateException } from "../common/InvalidStateException";
 
 export abstract class AbstractName implements Name {
   protected delimiter: string = DEFAULT_DELIMITER;
 
   constructor(delimiter: string = DEFAULT_DELIMITER) {
-    IllegalArgumentException.assertCondition(
-      delimiter.length === 1,
-      "delimiter must be a single character"
-    );
+    AbstractName.checkDelimiterPre(delimiter);
     this.delimiter = delimiter;
+    AbstractName.instanceofName(this);
   }
 
   public clone(): Name {
-    throw new Error("needs implementation");
+    return this;
   }
 
   public asString(delimiter: string = this.delimiter): string {
-    IllegalArgumentException.assertCondition(
-      delimiter.length == 1,
-      "Delimiter must be a single character"
-    );
+    AbstractName.checkDelimiterPre(delimiter)
     let output: string = "";
 
     let numberOfComponents = this.getNoComponents();
@@ -40,19 +37,19 @@ export abstract class AbstractName implements Name {
   }
 
   public asDataString(): string {
+    AbstractName.instanceofName(this)
     let result = "";
     for (let i = 0; i < this.getNoComponents(); i++) {
       result += this.getComponent(i);
       if (i < this.getNoComponents() - 1) result += DEFAULT_DELIMITER;
     }
+    AbstractName.instanceofName(this)
     return result;
   }
 
   public isEqual(other: Name): boolean {
-    IllegalArgumentException.assertIsNotNullOrUndefined(
-      other,
-      "argument is null"
-    );
+    AbstractName.instanceofName(this)
+    
     return (
       this.getHashCode() == other.getHashCode() &&
       this.asString() == other.asString()
@@ -60,11 +57,12 @@ export abstract class AbstractName implements Name {
   }
 
   public getHashCode(): number {
+    AbstractName.instanceofName(this)
     const str = this.toString();
     const className = this.constructor.name;
 
     const delimiterCharCode = this.getDelimiterCharacter().charCodeAt(0);
-
+    AbstractName.instanceofName(this)
     return (
       this.computeHash(str) ^ this.computeHash(className) ^ delimiterCharCode
     );
@@ -85,10 +83,7 @@ export abstract class AbstractName implements Name {
   }
 
   public getDelimiterCharacter(): string {
-    IllegalArgumentException.assertCondition(
-      this.delimiter.length == 1,
-      "Delimiter must be a single character"
-    );
+    AbstractName.checkDelimiterPre(this.delimiter);
     return this.delimiter;
   }
 
@@ -102,21 +97,54 @@ export abstract class AbstractName implements Name {
   abstract remove(i: number): void;
 
   public concat(other: Name): void {
-    IllegalArgumentException.assertCondition(other != null, "argument is null");
-    IllegalArgumentException.assertCondition(
-      other.getNoComponents() > 0,
-      "argument has no components"
-    );
-    IllegalArgumentException.assertCondition(
-      this.getNoComponents() > 0,
-      "this has no components"
-    );
-    IllegalArgumentException.assertCondition(
-      this.getDelimiterCharacter() == other.getDelimiterCharacter(),
-      "delimiters do not match"
-    );
+    AbstractName.instanceofName(this)
+    AbstractName.checkComponentPre(this.getNoComponents());
+    
+    AbstractName.checkDelimiterPre(this.delimiter);
     for (let i = 0; i < other.getNoComponents(); i++) {
       this.append(other.getComponent(i));
     }
+
+    AbstractName.checkComponentPost(this.getNoComponents());
   }
+
+  protected isInBounds(index: number){
+    if(index < 0 || index >= this.getNoComponents()){
+      throw new IllegalArgumentException("Index out of bounds");
+    }
+  }
+
+  protected static checkComponentPre(noComponents: number){
+    if(noComponents < 0){
+      throw new IllegalArgumentException("Number of components must be greater than 1!");
+    }
+  }
+
+  protected static checkComponentPost(noComponents: number){
+    if(noComponents < 0){
+      throw new MethodFailedException("Number of components must be greater than 1!");
+    }
+  }
+
+  protected static checkDelimiterPre(delimiter: string){
+    if(delimiter.length !== 1){
+      throw new IllegalArgumentException("Delimiter must be a single character");
+    }
+  }
+
+  protected static checkDelimiterPost(delimiter: string){
+    if(delimiter.length !== 1){
+      throw new MethodFailedException("Delimiter must be a single character");
+    }
+  }
+
+  protected static instanceofName(object: any){
+    if(!(object instanceof AbstractName)){
+      throw new InvalidStateException("Object is not an instance of Name");
+    }
+  }
+
+  
+
+
 }
