@@ -8,39 +8,53 @@ export class StringArrayName extends AbstractName {
   protected components: string[] = [];
 
   constructor(other: string[], delimiter?: string) {
-    
+    IllegalArgumentException.assertCondition(
+      other != null,
+      "other must not be null"
+    );
+    IllegalArgumentException.assertCondition(
+      other.length > 0,
+      "other must not be empty"
+    );
     super(delimiter);
     this.components = other;
   }
 
   public getNoComponents(): number {
-    AbstractName.instanceofName(this);
-    const lenght = this.components.length;
-    AbstractName.checkComponentPost(lenght)
-    AbstractName.instanceofName(this);
-    return lenght;
+    MethodFailedException.assertCondition(
+      this.components.length > 0,
+      "No components"
+    );
+    return this.components.length;
   }
 
   public getComponent(i: number): string {
-    AbstractName.instanceofName(this);
-    this.isInBounds(i)
-    AbstractName.checkComponentPre(this.components.length);
-
-    const component = this.components[i];
-
-    MethodFailedException.assert(component != null)
-    return component;
+    IllegalArgumentException.assertCondition(
+      i >= 0,
+      "Index must be greater than or equal to 0"
+    );
+    IllegalArgumentException.assertCondition(
+      i < this.components.length,
+      "Index must be less than the number of components"
+    );
+    return this.components[i];
   }
 
   public setComponent(i: number, c: string) {
-    this.isInBounds(i)
-    AbstractName.instanceofName(this)
-    AbstractName.checkDelimiterPre(this.delimiter)
-    AbstractName.checkComponentPre(this.components.length)
+    IllegalArgumentException.assertCondition(
+      i >= 0,
+      "Index must be greater than or equal to 0"
+    );
+    IllegalArgumentException.assertCondition(
+      i < this.components.length,
+      "Index must be less than the number of components"
+    );
 
-    const clone = this.clone(this)
-    
-    
+    this.components[i] = c;
+    MethodFailedException.assertCondition(
+      this.components[i] == c,
+      "Failed to set component"
+    );
   }
 
   public insert(i: number, c: string) {
