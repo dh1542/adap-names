@@ -10,9 +10,13 @@ export class StringName extends AbstractName {
   protected noComponents: number = 0;
 
   constructor(other: string, delimiter?: string) {
-    IllegalArgumentException.assertIsNotNullOrUndefined(other, "other is null");
+    AbstractName.checkComponentPre(other.length);
     super(delimiter);
     this.name = other;
+    this.noComponents = other.split(this.delimiter).length;
+
+    AbstractName.instanceofName(this);
+
   }
 
   public getNoComponents(): number {
@@ -20,43 +24,35 @@ export class StringName extends AbstractName {
   }
 
   public getComponent(i: number): string {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.noComponents,
-      "Index must be less than the number of components"
-    );
-    return this.name.split(this.delimiter)[i];
+    this.isInBounds(i);
+    AbstractName.instanceofName(this);
+
+    const component = this.name.split(this.delimiter)[i];
+    
+    AbstractName.instanceofName(this);
+    return component;
   }
 
   public setComponent(i: number, c: string) {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.noComponents,
-      "Index must be less than the number of components"
-    );
-    this.remove(i);
-    this.insert(i, c);
-    InvalidStateException.assertCondition(
-      this.getComponent(i) == c,
-      "Failed to set component"
-    );
+    this.isInBounds(i);
+    AbstractName.instanceofName(this);
+    AbstractName.checkComponentPre(this.noComponents);
+
+    const clone = this.clone();
+
+    
+    clone.remove(i);
+    clone.insert(i, c);
+
+    AbstractName.instanceofName(clone);
+    AbstractName.checkComponentPost(clone.getNoComponents());
+    return clone;
+
+    
   }
 
   public insert(i: number, c: string) {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.noComponents,
-      "Index must be less than the number of components"
-    );
+    this.isInBounds(i);
     let delimiterCount = 0;
     let insertPosition = 0;
 
@@ -79,27 +75,17 @@ export class StringName extends AbstractName {
       c +
       this.delimiter +
       this.name.slice(insertPosition);
-    InvalidStateException.assertCondition(
-      this.getComponent(i) == c,
-      "Failed to set component"
-    );
+    AbstractName.instanceofName(this);
+    return this;
   }
 
   public append(c: string) {
     this.name += this.delimiter + c;
     this.noComponents++;
-    console.log(this.name);
   }
 
   public remove(i: number) {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.noComponents,
-      "Index must be less than the number of components"
-    );
+    this.isInBounds(i);
     const components = this.name.split(this.delimiter);
     this.name = components
       .slice(0, i)

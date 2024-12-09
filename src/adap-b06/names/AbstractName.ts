@@ -14,7 +14,13 @@ export abstract class AbstractName implements Name {
   }
 
   public clone(): Name {
-    return this;
+   AbstractName.instanceofName(this)
+
+   const clone = Object.create(this);
+
+   MethodFailedException.assert(clone != null)
+   AbstractName.instanceofName(clone)
+   return clone
   }
 
   public asString(delimiter: string = this.delimiter): string {

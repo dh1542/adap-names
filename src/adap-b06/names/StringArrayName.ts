@@ -32,53 +32,67 @@ export class StringArrayName extends AbstractName {
     return component;
   }
 
+
+
   public setComponent(i: number, c: string) {
     this.isInBounds(i)
     AbstractName.instanceofName(this)
     AbstractName.checkDelimiterPre(this.delimiter)
     AbstractName.checkComponentPre(this.components.length)
 
-    const clone = this.clone(this)
-    
-    
+    const clone = this.clone()
+
+    if( clone instanceof StringArrayName){
+      clone.components[i] = c
+    } else{
+      MethodFailedException.assert(false, "Failed to set component")
+    }
+    AbstractName.instanceofName(clone)
+    return clone
   }
 
   public insert(i: number, c: string) {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.components.length,
-      "Index must be less than the number of components"
-    );
-    IllegalArgumentException.assertCondition(c.length > 0, "c is empty");
-    this.components.splice(i, 0, c);
-    MethodFailedException.assertCondition(
-      this.components[i] == c,
-      "Failed to insert component"
-    );
+    this.isInBounds(i)
+    AbstractName.checkComponentPre(this.components.length)  
+    const clone = this.clone()
+    if( clone instanceof StringArrayName){
+      clone.components.splice(i, 0, c);
+    } else{
+      MethodFailedException.assert(false, "Failed to insert component")
+    }
+    AbstractName.checkComponentPost(this.components.length)
+    AbstractName.instanceofName(this)
+
+    return clone;
   }
 
   public append(c: string) {
-    IllegalArgumentException.assertIsNotNullOrUndefined(c, "c is null");
-    IllegalArgumentException.assertCondition(c.length > 0, "c is empty");
-    this.components.push(c);
-    MethodFailedException.assertCondition(
-      this.components[this.getNoComponents() - 1] == c,
-      "Failed to append component"
-    );
+    AbstractName.instanceofName(this)
+    AbstractName.checkComponentPre(this.components.length)
+
+    const clone = this.clone()
+    if( clone instanceof StringArrayName){
+      clone.components.push(c);
+    } else{
+      MethodFailedException.assert(false, "Failed to append component")
+    }
+
+    AbstractName.checkComponentPost(this.components.length)
+    return clone;
   }
 
   public remove(i: number) {
-    IllegalArgumentException.assertCondition(
-      i >= 0,
-      "Index must be greater than or equal to 0"
-    );
-    IllegalArgumentException.assertCondition(
-      i < this.components.length,
-      "Index must be less than the number of components"
-    );
-    this.components.splice(i, 1);
+    this.isInBounds(i)
+    AbstractName.instanceofName(this)
+
+    const clone = this.clone()
+    if( clone instanceof StringArrayName){
+      clone.components.splice(i, 1);
+    } else{
+      MethodFailedException.assert(false, "Failed to append component")
+    }
+
+    AbstractName.checkComponentPost(this.components.length)
+    return clone;
   }
 }
